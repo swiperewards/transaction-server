@@ -8,7 +8,8 @@ var db_config = {
     user: config.databaseUser,
     password: config.databasePassword,
     database: config.databaseName,
-    multipleStatements: true
+    multipleStatements: true,
+    port: config.databasePort
 }
 
 var connection;

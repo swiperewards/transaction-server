@@ -37,14 +37,14 @@ exports.createMember = function (req, res) {
 
     splash.createMember(Reqbody, function (error, results) {
         if (error) {
-            logger.info("Error while creating merchants - " + req.body.userId);
+            logger.info("Error while creating member - " + req.body.userId);
             res.send(responseGenerator.getResponse(1081, msg.splashError, error));
         }
         else if (results) {
             if (results.body) {
 
                 if (results.body.response.errors.length > 0) {
-                    logger.info("Error while updating member - " + req.body.userId);
+                    logger.info("Error while creating member - " + req.body.userId);
                     res.send(responseGenerator.getResponse(1087, "Error while creating member", results.body.response.errors));
                 }
                 else if (results.body.response.data.length > 0) {
@@ -99,7 +99,7 @@ exports.createMember = function (req, res) {
                     db.query(query, params, function (errorMemberCreate, resultsMemberCreate) {
                         if (!errorMemberCreate) {
                             if (resultsMemberCreate.affectedRows == 1) {
-                                logger.info("Member updated successfully");
+                                logger.info("Member created successfully");
                                 res.send(responseGenerator.getResponse(200, "Member created successfully", memberData));
                             }
                             else {
@@ -109,7 +109,7 @@ exports.createMember = function (req, res) {
                         }
                         else {
                             logger.error("Error while processing your request", errorMemberCreate);
-                            res.send(responseGenerator.getResponse(1005, msg.dbError, null))
+                            res.send(responseGenerator.getResponse(1005, msg.dbError, errorMemberCreate))
                         }
                     });
 
@@ -158,13 +158,13 @@ exports.updateMember = function (req, res) {
     req.body.requestData.primary ? (Reqbody.primary = req.body.requestData.primary) : 0;
     req.body.requestData.phone ? (Reqbody.phone = req.body.requestData.phone) : 0;
     req.body.requestData.fax ? (Reqbody.fax = req.body.requestData.fax) : 0;
+    req.body.requestData.memberId ? (Reqbody.memberId = req.body.requestData.memberId) : 0;
     req.body.requestData.inactive ? (Reqbody.inactive = req.body.requestData.inactive) : 0;
     req.body.requestData.frozen ? (Reqbody.frozen = req.body.requestData.frozen) : 0;
-    req.body.requestData.memberId ? (Reqbody.memberId = req.body.requestData.memberId) : 0;
 
     splash.updateMember(Reqbody, function (error, results) {
         if (error) {
-            logger.info("Error while creating merchants - " + req.body.userId);
+            logger.info("Error while updating member - " + req.body.userId);
             res.send(responseGenerator.getResponse(1081, msg.splashError, error));
         }
         else if (results) {
@@ -187,9 +187,9 @@ exports.updateMember = function (req, res) {
                         "first": results.body.response.data[0].first ? results.body.response.data[0].first : null,
                         "middle": results.body.response.data[0].middle ? results.body.response.data[0].middle : null,
                         "last": results.body.response.data[0].last ? results.body.response.data[0].last : null,
-                        "ssn": results.body.response.data[0].ssn ? results.body.response.data[0].ssn : null,
-                        "dob": results.body.response.data[0].dob ? results.body.response.data[0].dob : null,
-                        "dl": results.body.response.data[0].dl ? results.body.response.data[0].dl : null,
+                        "ssn": results.body.response.data[0].ssn ? req.body.requestData.ssn : null,
+                        "dob": results.body.response.data[0].dob ? req.body.requestData.dob : null,
+                        "dl": results.body.response.data[0].dl ? req.body.requestData.dl : null,
                         "dlstate": results.body.response.data[0].dlstate ? results.body.response.data[0].dlstate : null,
                         "ownership": results.body.response.data[0].ownership ? results.body.response.data[0].ownership : null,
                         "email": results.body.response.data[0].email ? results.body.response.data[0].email : null,
@@ -201,9 +201,9 @@ exports.updateMember = function (req, res) {
                         "city": results.body.response.data[0].city ? results.body.response.data[0].city : null,
                         "address2": results.body.response.data[0].address2 ? results.body.response.data[0].address2 : null,
                         "address1": results.body.response.data[0].address1 ? results.body.response.data[0].address1 : null,
-                        "primary": results.body.response.data[0].primary ? results.body.response.data[0].primary : null,
-                        "inactive": results.body.response.data[0].inactive ? results.body.response.data[0].inactive : null,
-                        "frozen": results.body.response.data[0].frozen ? results.body.response.data[0].frozen : null,
+                        "primary": results.body.response.data[0].primary,
+                        "inactive": results.body.response.data[0].inactive,
+                        "frozen": results.body.response.data[0].frozen,
                         "timezone": results.body.response.data[0].timezone ? results.body.response.data[0].timezone : null
                     };
                     var params = [memberData.modified,
@@ -235,7 +235,7 @@ exports.updateMember = function (req, res) {
                         }
                         else {
                             logger.error("Error while processing your request", errorMemberUpdate);
-                            res.send(responseGenerator.getResponse(1005, msg.dbError, null))
+                            res.send(responseGenerator.getResponse(1005, msg.dbError, errorMemberUpdate))
                         }
                     });
 

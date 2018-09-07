@@ -22,7 +22,7 @@ function getMerchants(callback) {
 
 
 function createMerchant(Reqbody, callback) {
-    
+
     request({
         url: config.splashApiUrl + "/merchants",
         method: 'POST',
@@ -43,7 +43,7 @@ function createMerchant(Reqbody, callback) {
 
 
 function deleteMerchant(Reqbody, callback) {
-    
+
     request({
         url: config.splashApiUrl + "/merchants/" + Reqbody.merchantId,
         method: 'PUT',
@@ -64,7 +64,7 @@ function deleteMerchant(Reqbody, callback) {
 
 
 function updateMerchant(Reqbody, callback) {
-    
+
     request({
         url: config.splashApiUrl + "/merchants/" + Reqbody.merchantId,
         method: 'PUT',
@@ -85,7 +85,7 @@ function updateMerchant(Reqbody, callback) {
 
 
 function updateEntity(Reqbody, callback) {
-    
+
     request({
         url: config.splashApiUrl + "/entities/" + Reqbody.entityId,
         method: 'PUT',
@@ -98,8 +98,8 @@ function updateEntity(Reqbody, callback) {
             },
         form: Reqbody,
         json: true
-    }, function (err, res) {
-        callback(err, res);
+    }, function (err, res, body) {
+        callback(err, res, body);
     })
 
 }

@@ -12,15 +12,16 @@ exports.updateEntity = function (req, res) {
     Reqbody = {};
     Reqbody.login = config.entityLogin;
     req.body.requestData.type ? (Reqbody.type = req.body.requestData.type) : 0;
+    req.body.requestData.name ? (Reqbody.name = req.body.requestData.name) : 0;
     req.body.requestData.address1 ? (Reqbody.address1 = req.body.requestData.address1) : 0;
-    req.body.requestData.address2 ? (Reqbody.address2 = req.body.requestData.address2) : 0;
+    req.body.requestData.address2 || (req.body.requestData.address2 =="") ? (req.body.requestData.address2 == "" ? Reqbody.address2 = null : Reqbody.address2 = req.body.requestData.address2) : 0;
     req.body.requestData.city ? (Reqbody.city = req.body.requestData.city) : 0;
     req.body.requestData.state ? (Reqbody.state = req.body.requestData.state) : 0;
     req.body.requestData.zip ? (Reqbody.zip = req.body.requestData.zip) : 0;
     req.body.requestData.country ? (Reqbody.country = req.body.requestData.country) : 0;
     req.body.requestData.timezone ? (Reqbody.timezone = req.body.requestData.timezone) : 0;
     req.body.requestData.phone ? (Reqbody.phone = req.body.requestData.phone) : 0;
-    req.body.requestData.fax ? (Reqbody.fax = req.body.requestData.fax) : 0;
+    req.body.requestData.fax || (req.body.requestData.fax == "") ? (req.body.requestData.fax == "" ? Reqbody.fax = null : Reqbody.fax = req.body.requestData.fax) : 0;
     req.body.requestData.email ? (Reqbody.email = req.body.requestData.email) : 0;
     req.body.requestData.website ? (Reqbody.website = req.body.requestData.website) : 0;
     req.body.requestData.ein ? (Reqbody.ein = req.body.requestData.ein) : 0;
@@ -30,25 +31,23 @@ exports.updateEntity = function (req, res) {
     req.body.requestData.tcAcceptDate ? (Reqbody.tcAcceptDate = req.body.requestData.tcAcceptDate) : 0;
     req.body.requestData.tcAcceptIp ? (Reqbody.tcAcceptIp = req.body.requestData.tcAcceptIp) : 0;
     req.body.requestData.custom ? (Reqbody.custom = req.body.requestData.custom) : 0;
-    req.body.requestData.inactive ? (Reqbody.inactive = req.body.requestData.inactive) : 0;
-    req.body.requestData.frozen ? (Reqbody.frozen = req.body.requestData.frozen) : 0;
     req.body.requestData.reserved ? (Reqbody.reserved = req.body.requestData.reserved) : 0;
     req.body.requestData.checkStage ? (Reqbody.checkStage = req.body.requestData.checkStage) : 0;
     req.body.requestData.public ? (Reqbody.public = req.body.requestData.public) : 0;
-    req.body.requestData.customerPhone ? (Reqbody.customerPhone = req.body.requestData.customerPhone) : 0;
+    req.body.requestData.customerPhone || (req.body.requestData.customerPhone == "") ? (req.body.requestData.customerPhone == "" ? Reqbody.customerPhone = null : Reqbody.customerPhone = req.body.requestData.customerPhone) : 0;
     req.body.requestData.entityId ? (Reqbody.entityId = req.body.requestData.entityId) : 0;
 
     splash.updateEntity(Reqbody, function (error, results) {
         if (error) {
-            logger.info("Error while creating merchants - " + req.body.userId);
+            logger.info("Error while updating entity - " + req.body.userId);
             res.send(responseGenerator.getResponse(1081, msg.splashError, error));
         }
         else if (results) {
             if (results.body) {
 
                 if (results.body.response.errors.length > 0) {
-                    logger.info("Error while deleting merchant - " + req.body.userId);
-                    res.send(responseGenerator.getResponse(1084, "Error while deleting merchant", results.body.response.errors));
+                    logger.info("Error while updating entity - " + req.body.userId);
+                    res.send(responseGenerator.getResponse(1084, "Error while updating entity", results.body.response.errors));
                 }
                 else if (results.body.response.data.length > 0) {
                     //Success callback
@@ -61,7 +60,7 @@ exports.updateEntity = function (req, res) {
                         "ipCreated": results.body.response.data[0].ipCreated ? results.body.response.data[0].ipCreated : null,
                         "ipModified": results.body.response.data[0].ipModified ? results.body.response.data[0].ipModified : null,
                         "login": results.body.response.data[0].login ? results.body.response.data[0].login : null,
-                        "type": results.body.response.data[0].type ? results.body.response.data[0].type : null,
+                        "type": results.body.response.data[0].type,
                         "name": results.body.response.data[0].name ? results.body.response.data[0].name : null,
                         "address1": results.body.response.data[0].address1 ? results.body.response.data[0].address1 : null,
 
@@ -78,7 +77,7 @@ exports.updateEntity = function (req, res) {
 
                         "email": results.body.response.data[0].email ? results.body.response.data[0].email : null,
                         "website": results.body.response.data[0].website ? results.body.response.data[0].website : null,
-                        "ein": results.body.response.data[0].ein ? results.body.response.data[0].ein : null,
+                        "ein": results.body.response.data[0].ein ? req.body.requestData.ein : null,
 
                         "tcAcceptDate": results.body.response.data[0].tcAcceptDate ? results.body.response.data[0].tcAcceptDate : null,
                         "tcVersion": results.body.response.data[0].tcVersion ? results.body.response.data[0].tcVersion : null,
@@ -87,10 +86,8 @@ exports.updateEntity = function (req, res) {
                         "custom": results.body.response.data[0].custom ? results.body.response.data[0].custom : null,
                         "inactive": results.body.response.data[0].inactive,
                         "frozen": results.body.response.data[0].frozen,
-                        "tinStatus": results.body.response.data[0].tinStatus ? results.body.response.data[0].tinStatus : null,
-                        "reserved": results.body.response.data[0].reserved ? results.body.response.data[0].reserved : null,
                         "checkStage": results.body.response.data[0].checkStage ? results.body.response.data[0].checkStage : null,
-                        "public": results.body.response.data[0].public ? results.body.response.data[0].public : null,
+                        "public": results.body.response.data[0].public,
 
                         "customerPhone": results.body.response.data[0].customerPhone ? results.body.response.data[0].customerPhone : null
                     };
@@ -101,8 +98,8 @@ exports.updateEntity = function (req, res) {
                     entityData.state, entityData.zip, entityData.country,
                     entityData.timezone, entityData.phone, entityData.email,
                     entityData.website, entityData.ein, entityData.custom,
-                    entityData.inactive, entityData.frozen, entityData.tinStatus,
-                    entityData.reserved, entityData.checkStage, entityData.public,
+                    entityData.inactive, entityData.frozen,
+                    entityData.checkStage, entityData.public,
                     entityData.address2, entityData.fax, entityData.tcAcceptDate, entityData.tcVersion,
                     entityData.tcAcceptIp, entityData.customerPhone, entityData.id];
 
@@ -110,7 +107,7 @@ exports.updateEntity = function (req, res) {
                         "`creator_v` = ?,`modifier_v` = ?,`ipCreated_v` = ?,`ipModified_v` = ?,`login_v` = ?," +
                         "`type_v` = ?,`name_v` = ?,`address1_v` = ?,`city_v` = ?,`state_v` = ?,`zip_v` = ?,`country_v` = ?," +
                         "`timezone_v` = ?,`phone_v` = ?,`email_v` = ?,`website_v` = ?,`ein_v` = ?,`custom_v` = ?," +
-                        "`inactive_v` = ?,`frozen_v` = ?,`tinStatus_v` = ?,`reserved_v` = ?,`checkStage_v` = ?," +
+                        "`inactive_v` = ?,`frozen_v` = ?,`checkStage_v` = ?," +
                         "`public_v` = ?,`address2_v` = ?,`fax_v` = ?,`tcAcceptDate_v` = ?,`tcVersion_v` = ?,`tcAcceptIp_v` = ?,`customerPhone_v` = ?" +
                         " where id = ?";
 
@@ -126,8 +123,8 @@ exports.updateEntity = function (req, res) {
                             }
                         }
                         else {
-                            logger.error("Error while processing your request", errorAccountCreation);
-                            res.send(responseGenerator.getResponse(1005, msg.dbError, null))
+                            logger.error("Error while processing your request", errorEntityCreation);
+                            res.send(responseGenerator.getResponse(1005, msg.dbError, errorEntityCreation))
                         }
                     });
 
