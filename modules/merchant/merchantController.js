@@ -60,7 +60,7 @@ exports.getMerchantsWithFilter = function (req, res) {
             res.send(responseGenerator.getResponse(200, "Success", merchantList));
         } else {
             logger.error("Error while processing your request", errorGetMerchants);
-            res.send(responseGenerator.getResponse(200, "Error while fetching merchants", errorGetMerchants));
+            res.send(responseGenerator.getResponse(1005, "Error while fetching merchants", errorGetMerchants));
         }
     })
 }
