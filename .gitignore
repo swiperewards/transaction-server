@@ -2,3 +2,5 @@
 /node_modules/
 /package.json
 /modules/test/
+config.js
+logger.log

@@ -13,7 +13,9 @@ var configRoutes=require(path.resolve('.','modules/config/configRoutes'));
 var entityRoutes=require(path.resolve('.','modules/entity/entityRoutes'));
 var memberRoutes=require(path.resolve('.','modules/member/memberRoutes'));
 var accountRoutes=require(path.resolve('.','modules/account/accountRoutes'));
-
+var cronRoutes=require(path.resolve('.','modules/cron/cronRoutes'));
+var customerRoutes=require(path.resolve('.','modules/customer/customerRoutes'));
+var poolRoutes=require(path.resolve('.','modules/pool/poolRoutes'));
 var app = express();
 
 // view engine setup
@@ -39,7 +41,9 @@ app.use("/config", configRoutes);
 app.use("/entity", entityRoutes);
 app.use("/member", memberRoutes);
 app.use("/account", accountRoutes);
-
+app.use("/cron", cronRoutes);
+app.use("/customer", customerRoutes);
+app.use("/pool", poolRoutes);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

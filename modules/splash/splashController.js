@@ -3,16 +3,20 @@ var config = require(path.resolve('./', 'config'));
 var logger = require(path.resolve('./logger'));
 var request = require('request');
 
+/**
+ * This class is used to call the splash api's to add,remove,update splash entities, merchants, customer etc.
+ */
+
 function getMerchants(callback) {
 
     request({
         url: config.splashApiUrl + "/merchants",
         method: 'GET',
         headers:
-            {
-                'Content-Type': 'application/json',
-                'APIKEY': config.splashApiPrivateKey
-            },
+        {
+            'Content-Type': 'application/json',
+            'APIKEY': config.splashApiPrivateKey
+        },
         json: true
     }, function (err, res) {
         callback(err, res);
@@ -27,12 +31,12 @@ function createMerchant(Reqbody, callback) {
         url: config.splashApiUrl + "/merchants",
         method: 'POST',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res) {
@@ -48,12 +52,12 @@ function deleteMerchant(Reqbody, callback) {
         url: config.splashApiUrl + "/merchants/" + Reqbody.merchantId,
         method: 'PUT',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res) {
@@ -69,12 +73,12 @@ function updateMerchant(Reqbody, callback) {
         url: config.splashApiUrl + "/merchants/" + Reqbody.merchantId,
         method: 'PUT',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res) {
@@ -90,12 +94,12 @@ function updateEntity(Reqbody, callback) {
         url: config.splashApiUrl + "/entities/" + Reqbody.entityId,
         method: 'PUT',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res, body) {
@@ -110,12 +114,12 @@ function createMember(Reqbody, callback) {
         url: config.splashApiUrl + "/members",
         method: 'POST',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res) {
@@ -128,12 +132,12 @@ function updateMember(Reqbody, callback) {
         url: config.splashApiUrl + "/members/" + Reqbody.memberId,
         method: 'PUT',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            APIKEY: config.splashApiPrivateKey
+        },
         form: Reqbody,
         json: true
     }, function (err, res) {
@@ -147,18 +151,45 @@ function updateAccount(Reqbody, callback) {
         url: config.splashApiUrl + "/accounts/" + Reqbody.accountId,
         method: 'PUT',
         headers:
-            {
-                'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                APIKEY: config.splashApiPrivateKey
-            },
-        form: Reqbody,
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'content-type': 'application/json',
+            'apkey': config.splashApiPrivateKey
+        },
+        body: Reqbody,
         json: true
     }, function (err, res) {
         callback(err, res);
     })
 }
+
+
+/**
+ * This function is used to onboard the customer on splash server.
+ * @param {*} Reqbody 
+ * @param {*} callback 
+ */
+function createCustomer(Reqbody, callback) {
+
+    request({
+        url: config.splashApiUrl + "/customers",
+        method: 'POST',
+        headers:
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/json',
+            APIKEY: config.splashApiPrivateKey
+        },
+        body: Reqbody,
+        json: true
+    }, function (err, res) {
+        callback(err, res);
+    })
+
+}
+
 
 module.exports = {
     getMerchants: getMerchants,
@@ -168,6 +199,7 @@ module.exports = {
     updateEntity: updateEntity,
     updateMember: updateMember,
     updateAccount: updateAccount,
-    createMember: createMember
+    createMember: createMember,
+    createCustomer: createCustomer
 }
 
