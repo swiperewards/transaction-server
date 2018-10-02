@@ -60,7 +60,7 @@ exports.getMerchantsWithFilter = function (req, res) {
             res.send(responseGenerator.getResponse(200, "Success", merchantList));
         } else {
             logger.error("Error while processing your request", errorGetMerchants);
-            res.send(responseGenerator.getResponse(200, "Error while fetching merchants", errorGetMerchants));
+            res.send(responseGenerator.getResponse(1005, "Error while fetching merchants", errorGetMerchants));
         }
     })
 }
@@ -467,7 +467,7 @@ exports.createMerchant = function (req, res) {
 
 exports.deleteMerchant = function (req, res) {
     Reqbody = {
-        inactive: 1,
+        inactive: req.body.requestData.inactive,
         merchantId: req.body.requestData.merchantId
     }
     splash.deleteMerchant(Reqbody, function (error, results) {
@@ -509,7 +509,10 @@ exports.deleteMerchant = function (req, res) {
                         if (!errorMerchantDelete) {
                             if (resultsMerchantDelete.affectedRows == 1) {
                                 logger.info("Merchant deleted successfully");
-                                res.send(responseGenerator.getResponse(200, "Merchant deleted successfully", null));
+                                if(req.body.requestData.inactive == "1")
+                                res.send(responseGenerator.getResponse(200, "Merchant deactivated successfully", null));
+                                else
+                                res.send(responseGenerator.getResponse(200, "Merchant activated successfully", null));
                             }
                             else {
                                 logger.info("Something went wrong - " + req.body.userId);
