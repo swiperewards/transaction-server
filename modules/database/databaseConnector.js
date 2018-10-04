@@ -9,7 +9,8 @@ var db_config = {
     password: config.databasePassword,
     database: config.databaseName,
     multipleStatements: true,
-    port: config.databasePort
+    port: config.databasePort,
+    dateStrings: true
 }
 
 var connection;

@@ -191,6 +191,37 @@ function createCustomer(Reqbody, callback) {
 }
 
 
+
+/**
+ * This function is used to onboard the credit card on splash server and to get token.
+ * @param {*} Reqbody 
+ * @param {*} callback 
+ */
+function createToken(Reqbody, callback) {
+
+    request({
+        url: config.splashApiUrl + "/tokens",
+        method: 'POST',
+        headers:
+        {
+            'Postman-Token': '9cb7d219-c4a8-4ac4-9b6c-6cf2683b1742',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/json',
+            APIKEY: config.splashApiPrivateKey
+        },
+        body: Reqbody,
+        json: true
+    }, function (err, res) {
+        callback(err, res);
+    })
+
+}
+
+
+
+
+
+
 module.exports = {
     getMerchants: getMerchants,
     createMerchant: createMerchant,
@@ -200,6 +231,7 @@ module.exports = {
     updateMember: updateMember,
     updateAccount: updateAccount,
     createMember: createMember,
-    createCustomer: createCustomer
+    createCustomer: createCustomer,
+    createToken: createToken
 }
 

@@ -5,4 +5,5 @@ var router=express.Router();
 
 router.post("/createCustomer", api.createCustomer);
 
+router.post("/createToken", api.createToken);
 module.exports=router;

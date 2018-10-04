@@ -35,3 +35,35 @@ exports.createCustomer = function (req, res) {
         }
     });
 }
+
+
+/**
+ * This function is used to onboard the customer credit cards to splash server.
+ * It is required to onboard every customer from splash to get their customtokens id's.
+ * This api will get called once user register from native apps.
+ * On register request Nouvo server 1 will call this Nouvo transaction server api, if onboarding successful then 
+ * only tokens/credit careds will be onboarded to server 1.
+ * @author vishal.bharati
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.createToken = function (req, res) {
+    splash.createToken(req.body, function (error, results) {
+        if (error) {
+            logger.info("Error while creating token");
+            res.send(responseGenerator.getResponse(1181, msg.splashError, error));
+        }
+        else if (results) {
+            if (results.body) {
+                if (results.body.response.errors.length > 0) {
+                    logger.info("Error while creating token");
+                    res.send(responseGenerator.getResponse(1184, "Error while creating token", results.body.response.errors));
+                }
+                else if (results.body.response.data.length > 0) {
+                    //INSERT CREDIT CARD DETAILS HERE
+                    res.send(responseGenerator.getResponse(200, "Token created successfully", results.body.response.data));
+                }
+            }
+        }
+    });
+}

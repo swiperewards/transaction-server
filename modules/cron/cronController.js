@@ -8,7 +8,7 @@ var each = require('sync-each');
 var nouvoController = require(path.resolve('.', 'modules/nouvo/nouvoController.js'));
 var poolController = require(path.resolve('.', 'modules/pool/poolController.js'));
 var defaultPageIndex = 1;
-var cronIntervalTimeInMillis = 20000; // Interval of 300 seconds to get the transactions from splash server.
+var cronIntervalTimeInMillis = 300000; // Interval of 300 seconds to get the transactions from splash server.
 var myresp;
 var responseGenerator = require(path.resolve('.', 'utils/responseGenerator.js'));
 
@@ -20,7 +20,7 @@ var responseGenerator = require(path.resolve('.', 'utils/responseGenerator.js'))
  */
 
 //Init transaction fetch process once server starts.
-// init();
+init();
 
 /**
  * This function get the max modified date of the already fetched transactins and send it to splash server to fetch
@@ -59,8 +59,9 @@ exports.getTransactionViaCronJob = function (req, resp) {
  * @param {*} maxModifiedDate  - Max modifed date of already fetched transactions.
  */
 function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
-    console.log('modifiedDate ' + JSON.stringify(maxModifiedDate));
+    console.log('modifiedDate '+ maxModifiedDate);
 
+    
     request({
         url: config.splashApiUrl + "/txns",
         method: 'GET',
@@ -81,10 +82,10 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
             // saveTransactionToDatabase(res,splashResponse.body.data)
             if (splashResponse != null && splashResponse.body != null && splashResponse.body.response != null && splashResponse.body.response.data != null) {
 
-                if (myresp != null) {
-                    myresp.send(responseGenerator.getResponse(200, null, splashResponse));
+                // if (myresp != null) {
+                //     myresp.send(responseGenerator.getResponse(200, null, splashResponse));
 
-                }
+                // }
                 con.beginTransaction(function (err) {
                     if (err) {
                         throw err;
@@ -140,9 +141,8 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
 
                                 //Get the active deals from Nouvo server 1 and update server 1 with updated pool amounts.
                                 getActiveDealsAndUpdatePoolAmounts();
+                                
 
-                                //All transactions has been fetched set next transaction sync scheduler
-                                setNextScheduledBatchInterval();
                             }
                             //Success callback
                         })
@@ -176,8 +176,7 @@ function getMaxModifedDate(callback) {
     var query = "SELECT max(modified) as maxModified FROM transaction";
     con.query(query, function (err, resultMaxDate) {
         if (!err && resultMaxDate != null && resultMaxDate[0]['maxModified'] != null && resultMaxDate.length > 0) {
-            var maxDate = resultMaxDate[0]['maxModified'];
-            callback(maxDate)
+            callback(resultMaxDate[0]['maxModified']);
         } else {
             // return default date in case of error or in case no records found
             callback('1970-01-01T00:00:00.000Z');
@@ -194,22 +193,28 @@ function getActiveDealsAndUpdatePoolAmounts() {
     nouvoController.getActiveDeals(body, function (error, response) {
         if (error) {
             logger.error("Error while getting active deals", error);
+            setNextScheduledBatchInterval();
         } else {
             if (response != null && response.body != null && response.body.responseData != null) {
                 //If active deals found then get the pool amount using below function of poolController class.
                 poolController.getPoolAmountByMerchantDetails(response.body.responseData, function (error, poolAmtResponse) {
                     if (error) {
                         logger.error("Error while getting active deals", error);
+                        setNextScheduledBatchInterval();
                     } else {
                         //Once pool amount is calculated call Nouvo server 1 api to update the  amounts total nouvo user transactions & non nouvo transactions..
                         nouvoController.updatePoolAmounts(poolAmtResponse, function (error, response) {
                             if (error) {
                                 logger.error("Error while getting active deals", error);
-                                // res.send(responseGenerator.getResponse(1005, msg.dbError, null));
+                                setNextScheduledBatchInterval();
                             } else {
                                 //Pool amounts has been updated successfully at Nouvo server 1 
                                 //Now XP points needs to be calculated.
                                 console.log('Success callback pool amount update at server 2 from server 1');
+
+                                //All transactions has been fetched set next transaction sync scheduler
+                                setNextScheduledBatchInterval();
+
                             }
                         });
                     }
