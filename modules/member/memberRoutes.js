@@ -7,11 +7,11 @@ var router=express.Router();
 
 
 // api to update member
-router.post("/createMember", api.createMember);
+router.post("/createMember", functions.decryptDataMiddleWare, api.createMember);
 
 
 // api to update member
-router.post("/updateMember", api.updateMember);
+router.post("/updateMember", functions.decryptDataMiddleWare, api.updateMember);
 
 
 module.exports=router;
