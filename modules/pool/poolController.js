@@ -73,11 +73,32 @@ function getPoolAmountByMerchantDetails(req, callback) {
                                 else {
                                     console.log('All active deal details inserted to temporary table.');
 
+                                    //query by Vishal B
                                     //All active deals fetched and inserted to temporary table now perform get 
                                     //total swipe amount for all active deals and pass the result back to caller.
-                                    var query = 'SELECT t2.deal_id,t1.merchant, sum(t1.settledtotal) as registeredSwipeAmt, 0 as nonRegisteredSwipeAmt ' +
-                                        'FROM transaction t1 join deal_pool t2 on t1.merchant=t2.merchant ' +
-                                        'where t1.settled>=t2.start_date and t1.settled<=t2.end_date group by merchant';
+                                    // var query = 'SELECT t2.deal_id,t1.merchant, sum(t1.settledtotal) as registeredSwipeAmt, 0 as nonRegisteredSwipeAmt ' +
+                                    //     'FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant ' +
+                                    //     'where t1.settled>=t2.start_date and t1.settled<=t2.end_date group by merchant';
+
+                                    // query by me
+                                    // var query = 'select deal_id, merchant, sum(nonRegisteredUserSwipeAmt) as nonRegisteredUserSwipeAmt, sum(registeredUserSwipeAmt) as registeredUserSwipeAmt' +
+                                    //     ' from(select t2.deal_id,t1.merchant, 0 as nonRegisteredUserSwipeAmt, sum(t1.settledtotal) as registeredUserSwipeAmt' +
+                                    //     ' FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant' +
+                                    //     ' where t1.settled>=t2.start_date and t1.settled<=t2.end_date and t1.isNouvoUser = 1 group by merchant' +
+                                    //     ' union' +
+                                    //     ' SELECT t2.deal_id,t1.merchant, sum(t1.settledtotal) as nonRegisteredUserSwipeAmt, 0 as registeredUserSwipeAmt' +
+                                    //     ' FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant' +
+                                    //     ' where t1.settled>=t2.start_date and t1.settled<=t2.end_date and t1.isNouvoUser = 0 group by merchant) as tbl group by merchant'
+                                    
+                                    var query = 'select deal_id, merchant, sum(nonRegisteredUserSwipeAmt) as nonRegisteredUserSwipeAmt, sum(registeredUserSwipeAmt) as registeredUserSwipeAmt' +
+                                        ' from((select t2.deal_id,t1.merchant, 0 as nonRegisteredUserSwipeAmt, sum(t1.total) as registeredUserSwipeAmt' +
+                                        ' FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant' +
+                                        ' where t1.isNouvoUser = "1" group by merchant)' +
+                                        ' union' +
+                                        ' (SELECT t2.deal_id,t1.merchant, sum(t1.total) as nonRegisteredUserSwipeAmt, 0 as registeredUserSwipeAmt' +
+                                        ' FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant' +
+                                        ' where t1.isNouvoUser = "0" group by merchant)) as tbl group by merchant'
+                                    
                                     con.query(query, function (error, results) {
                                         callback(error, results)
                                     })
@@ -85,10 +106,8 @@ function getPoolAmountByMerchantDetails(req, callback) {
                             });
                         }
                     })
-
             } else {
                 logger.error("Error while processing your request", error);
-
             }
         })
 
@@ -155,7 +174,7 @@ exports.getPoolAmountByMerchantId = function (req, resp) {
 
                                 console.log('Transaction Complete.');
 
-                                var query = 'SELECT t1.merchant, sum(t1.settledtotal) as registeredSwipeAmt, sum(t1.settledtotal) as nonRegisteredSwipeAmt FROM transaction t1 join deal_pool t2 on t1.merchant=t2.merchant' +
+                                var query = 'SELECT t1.merchant, sum(t1.settledtotal) as registeredSwipeAmt, sum(t1.settledtotal) as nonRegisteredSwipeAmt FROM transactions t1 join deal_pool t2 on t1.merchant=t2.merchant' +
                                     ' where t1.settled>=t2.start_date and t1.settled<=t2.end_date group by merchant';
                                 con.query(query, function (error, results) {
                                     if (!error) {

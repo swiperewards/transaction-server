@@ -12,7 +12,7 @@ var request = require('request');
   * @param {*} Reqbody 
   * @param {*} callback 
   */
-function getActiveDeals(Reqbody,callback) {
+function getActiveDeals(callback) {
 
     request({
         url: config.nouvoApiUrl + "/deals/getActiveDeals",
@@ -21,8 +21,7 @@ function getActiveDeals(Reqbody,callback) {
             {
                 'Content-Type': 'application/json'
             },
-        json: true,
-        body: Reqbody
+        json: true
     }, function (err, res) {
         callback(err, res);
     })
@@ -53,9 +52,55 @@ function updatePoolAmounts(Reqbody,callback) {
 }
 
 
+/**
+  * This function is used to get the expired deals from Nouvo server 1 and pass the result back to caller with array of deals.
+  * @param {*} Reqbody 
+  * @param {*} callback 
+  */
+ function getExpiredDeals(callback) {
+
+    request({
+        url: config.nouvoApiUrl + "/deals/getExpiredDeals",
+        method: 'POST',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        json: true
+    }, function (err, res) {
+        callback(err, res);
+    })
+
+}
+
+
+
+/**
+  * This function is update the total swipe amounts of active deals which is placed at Nouvo server 1.
+  * @param {*} Reqbody 
+  * @param {*} callback 
+  */
+ function distributeRewards(Reqbody,callback) {
+
+    request({
+        url: config.nouvoApiUrl + "/deals/distributeRewards",
+        method: 'POST',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        json: true,
+        body: Reqbody
+    }, function (err, res) {
+        callback(err, res);
+    })
+
+}
 
 module.exports = {
     getActiveDeals: getActiveDeals,
-    updatePoolAmounts:updatePoolAmounts
+    updatePoolAmounts:updatePoolAmounts,
+    getExpiredDeals: getExpiredDeals,
+    distributeRewards: distributeRewards
 }
 

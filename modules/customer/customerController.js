@@ -3,6 +3,7 @@ var logger = require(path.resolve('./logger'))
 var responseGenerator = require(path.resolve('.', 'utils/responseGenerator.js'))
 var request = require('request');
 var splash = require(path.resolve('.', 'modules/splash/splashController.js'));
+var db = require(path.resolve('.', 'modules/database/databaseConnector.js'));
 
 
 /**
@@ -64,6 +65,46 @@ exports.createToken = function (req, res) {
                     res.send(responseGenerator.getResponse(200, "Token created successfully", results.body.response.data));
                 }
             }
+        }
+    });
+}
+
+
+exports.addCard = function (req, res) {
+    var params = [req.body.requestData.id, req.body.requestData.cardNumber, req.body.requestData.userId];
+    var query = "insert into cards (id, cardNumber, userId) values(?,?,?)";
+    db.query(query, params, function (errorAddCard, resultsAddCard) {
+        if (!errorAddCard) {
+            var params = [req.body.requestData.userId];
+            var query = "select * from users where userId = ?";
+            db.query(query, params, function (errorIfUserExists, resultsIfUserExists) {
+                if (!errorIfUserExists) {
+                    if (resultsIfUserExists.length > 0) {
+                        res.send(responseGenerator.getResponse(200, "Success", null));
+                    }
+                    else {
+                        var params = [req.body.requestData.userId];
+                        var query = "insert into users (userId) values(?)";
+                        db.query(query, params, function (errorInsertUser, resultsInsertUser) {
+                            if (!errorInsertUser) {
+                                res.send(responseGenerator.getResponse(200, "Success", null));
+                            }
+                            else {
+                                logger.error("Error while processing your request", errorInsertUser);
+                                res.send(responseGenerator.getResponse(1005, msg.dbError, errorInsertUser))
+                            }
+                        });
+                    }
+                }
+                else {
+                    logger.error("Error while processing your request", errorIfUserExists);
+                    res.send(responseGenerator.getResponse(1005, msg.dbError, errorIfUserExists))
+                }
+            });
+        }
+        else {
+            logger.error("Error while processing your request", errorAddCard);
+            res.send(responseGenerator.getResponse(1005, msg.dbError, errorAddCard))
         }
     });
 }
