@@ -78,8 +78,10 @@ exports.getMerchantsWithFilter = function (req, res) {
 
 
 exports.getMerchantDetails = function (req, res) {
+
     var obj = {};
     var params = [req.body.requestData.merchantId];
+    var logoUrl = req.body.requestData.logoUrl;
 
     var query = "Select * from entities e inner join merchants m on e.id = m.entityId_v where m.id = ?";
 
@@ -87,7 +89,7 @@ exports.getMerchantDetails = function (req, res) {
         if (!errorGetMerchants) {
             if (resultsGetMerchants.length > 0) {
                 obj = resultsGetMerchants[0];
-
+                obj.logoUrl = logoUrl;
                 var query = "Select * from members where merchant_v = ?";
 
                 db.query(query, params, function (errorGetMembers, resultsGetMembers) {

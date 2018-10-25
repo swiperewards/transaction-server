@@ -7685,3 +7685,129 @@
 {"message":"Created logger","level":"info"}
 {"message":"Created logger","level":"info"}
 {"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"configController - keep alive (mysql)- Tue Oct 23 2018 15:00:01 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04d53e0a4e1b2d331dd2","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04dbb3636696ea903c61","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04e2b398e82d06fb8086","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04eb5af2117dda5e2828","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04eff590f872942c1886","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd04f4b1e46517739ae298","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd0568fe1f1f79157efbfe","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd056e0818240ced61d8cd","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"configController - keep alive (mysql)- Wed Oct 24 2018 17:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"configController - keep alive (mysql)- Wed Oct 24 2018 18:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"configController - keep alive (mysql)- Wed Oct 24 2018 19:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"configController - keep alive (mysql)- Wed Oct 24 2018 20:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"level":"error","message":"Error while getting active deals"}
+{"message":"Merchant updated successfully","level":"info"}
+{"message":"Error while updating entity - undefined","level":"info"}
+{"message":"Account updated successfully","level":"info"}
+{"message":"configController - keep alive (mysql)- Wed Oct 24 2018 21:00:01 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"Created logger","level":"info"}
+{"level":"error","message":"Error while getting active deals"}
+{"message":"Created logger","level":"info"}
+{"message":"account inserted successfully - t1_act_5bd153570444243e24a6bf8","level":"info"}
+{"message":"Member added successfully - 24","level":"info"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 11:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchant deleted successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 12:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 13:00:01 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 14:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 15:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 16:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
+{"message":"Created logger","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"configController - keep alive (mysql)- Thu Oct 25 2018 17:00:00 GMT+0530 (India Standard Time)","level":"info"}
+{"message":"Created logger","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"message":"Merchants list pulled successfully","level":"info"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"192.168.0.198","port":5000,"level":"error","message":"Error while getting active deals"}
