@@ -43,10 +43,21 @@ exports.getMerchantsWithFilter = function (req, res) {
         state: req.body.requestData.stateFilter ? "%" + req.body.requestData.stateFilter + "%" : "%%"
     }
     var params = [1, filterStrings.name, filterStrings.inactive, filterStrings.state];
+    var merchantsList = req.body.requestData.merchantsList;
+    var str = ""
+    for (var i = 0; i < merchantsList.length; ++i) {
+        if (i == 0) {
+            str = "?"
+        }
+        else
+            str = str + ",?";
 
+        params.push(merchantsList[i].merchantId);
+    }
     var query = "Select m.id, e.name_v, b.first_v, b.last_v, m.inactive_v, case when m.inactive_v = '1' then 'Deactive' else 'Active' end status, e.frozen_v, m.created_v," +
         " e.city_v, e.state_v, e.email_v, e.phone_v from entities e join merchants m on e.id = m.entityId_v" +
-        " join members b on b.merchant_v = m.id where b.primary_v = ? and concat(b.first_v, ' ', b.last_v) like ? and m.inactive_v like ? and e.state_v like ? order by m.modified_v desc";
+        " join members b on b.merchant_v = m.id where b.primary_v = ? and concat(b.first_v, ' ', b.last_v) like ? and m.inactive_v like ? and e.state_v like ? and m.id in(" + str + ") order by m.modified_v desc";
+
 
     db.query(query, params, function (errorGetMerchants, resultsGetMerchants) {
         if (!errorGetMerchants) {
@@ -60,15 +71,17 @@ exports.getMerchantsWithFilter = function (req, res) {
             res.send(responseGenerator.getResponse(200, "Success", merchantList));
         } else {
             logger.error("Error while processing your request", errorGetMerchants);
-            res.send(responseGenerator.getResponse(200, "Error while fetching merchants", errorGetMerchants));
+            res.send(responseGenerator.getResponse(1005, "Error while fetching merchants", errorGetMerchants));
         }
     })
 }
 
 
 exports.getMerchantDetails = function (req, res) {
+
     var obj = {};
     var params = [req.body.requestData.merchantId];
+    var logoUrl = req.body.requestData.logoUrl;
 
     var query = "Select * from entities e inner join merchants m on e.id = m.entityId_v where m.id = ?";
 
@@ -76,7 +89,7 @@ exports.getMerchantDetails = function (req, res) {
         if (!errorGetMerchants) {
             if (resultsGetMerchants.length > 0) {
                 obj = resultsGetMerchants[0];
-
+                obj.logoUrl = logoUrl;
                 var query = "Select * from members where merchant_v = ?";
 
                 db.query(query, params, function (errorGetMembers, resultsGetMembers) {
@@ -467,7 +480,7 @@ exports.createMerchant = function (req, res) {
 
 exports.deleteMerchant = function (req, res) {
     Reqbody = {
-        inactive: 1,
+        inactive: req.body.requestData.inactive,
         merchantId: req.body.requestData.merchantId
     }
     splash.deleteMerchant(Reqbody, function (error, results) {
@@ -509,7 +522,10 @@ exports.deleteMerchant = function (req, res) {
                         if (!errorMerchantDelete) {
                             if (resultsMerchantDelete.affectedRows == 1) {
                                 logger.info("Merchant deleted successfully");
-                                res.send(responseGenerator.getResponse(200, "Merchant deleted successfully", null));
+                                if (req.body.requestData.inactive == "1")
+                                    res.send(responseGenerator.getResponse(200, "Merchant deactivated successfully", null));
+                                else
+                                    res.send(responseGenerator.getResponse(200, "Merchant activated successfully", null));
                             }
                             else {
                                 logger.info("Something went wrong - " + req.body.userId);
