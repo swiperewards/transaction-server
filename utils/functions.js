@@ -25,15 +25,28 @@ function encrypt(plainText) {
 
 
 
+
 function decryptData(encryptedText) {
-    var encrypted = CryptoJS.AES.decrypt(encryptedText, config.secretKeyDataEncryption);
-    var plainText = encrypted.toString(CryptoJS.enc.Utf8);
-    if (plainText == "")
-        return null;
-    else {
-        var data = JSON.parse(plainText);
-        return data;
+    if (config.isEncryptionEnabled && encryptedText) {
+        if((typeof encryptedText) == "string") {
+            var encrypted = CryptoJS.AES.decrypt(encryptedText, config.secretKeyDataEncryption);
+            var plainText = encrypted.toString(CryptoJS.enc.Utf8);
+            if (plainText == "")
+                return null;
+            else {
+                var data = JSON.parse(plainText);
+                return data;
+            }
+        }
+        else {
+            return encryptedText;
+        }
+        
     }
+    else {
+        return encryptedText;
+    }
+    
 }
 
 function decryptDataMiddleWare(req, res, next) {
