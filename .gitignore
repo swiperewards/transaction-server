@@ -4,3 +4,4 @@
 /modules/test/
 config.js
 package-lock.json
+logger.log
