@@ -97,10 +97,62 @@ function updatePoolAmounts(Reqbody,callback) {
 
 }
 
+function sendNotifToUsers(Reqbody) {
+
+    request({
+        url: config.nouvoApiUrl + "/notifications/sendNotifToUsers",
+        method: 'POST',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        json: true,
+        body: Reqbody
+    })
+
+}
+
+
+function sendNotifLevelUp(Reqbody) {
+
+    request({
+        url: config.nouvoApiUrl + "/notifications/sendNotifLevelUp",
+        method: 'POST',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        json: true,
+        body: Reqbody
+    })
+
+}
+
+
+
+
+function sendNotifLevelUpAfterTxns(Reqbody) {
+
+    request({
+        url: config.nouvoApiUrl + "/notifications/sendNotifLevelUpAfterTxns",
+        method: 'POST',
+        headers:
+            {
+                'Content-Type': 'application/json'
+            },
+        json: true,
+        body: Reqbody
+    })
+
+}
+
 module.exports = {
     getActiveDeals: getActiveDeals,
     updatePoolAmounts:updatePoolAmounts,
     getExpiredDeals: getExpiredDeals,
-    distributeRewards: distributeRewards
+    distributeRewards: distributeRewards,
+    sendNotifToUsers: sendNotifToUsers,
+    sendNotifLevelUp: sendNotifLevelUp,
+    sendNotifLevelUpAfterTxns: sendNotifLevelUpAfterTxns
 }
 

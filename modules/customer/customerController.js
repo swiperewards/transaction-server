@@ -4,6 +4,7 @@ var responseGenerator = require(path.resolve('.', 'utils/responseGenerator.js'))
 var request = require('request');
 var splash = require(path.resolve('.', 'modules/splash/splashController.js'));
 var db = require(path.resolve('.', 'modules/database/databaseConnector.js'));
+var nouvoController = require(path.resolve('.', 'modules/nouvo/nouvoController.js'));
 
 
 /**
@@ -80,11 +81,22 @@ exports.addCard = function (req, res) {
             db.query(query, params, function (errorIfUserExists, resultsIfUserExists) {
                 if (!errorIfUserExists) {
                     if (resultsIfUserExists.length > 0) {
-                        res.send(responseGenerator.getResponse(200, "Success", null));
+                        // res.send(responseGenerator.getResponse(200, "Success", null));
+                        var params = [req.body.requestData.availableXp, req.body.requestData.userId];
+                        var query = "update users set referralXP = ? where userId = ?";
+                        db.query(query, params, function (errorInsertUser, resultsInsertUser) {
+                            if (!errorInsertUser) {
+                                res.send(responseGenerator.getResponse(200, "Success", null));
+                            }
+                            else {
+                                logger.error("Error while processing your request", errorInsertUser);
+                                res.send(responseGenerator.getResponse(1005, msg.dbError, errorInsertUser))
+                            }
+                        });
                     }
                     else {
-                        var params = [req.body.requestData.userId];
-                        var query = "insert into users (userId) values(?)";
+                        var params = [req.body.requestData.userId, req.body.requestData.availableXp];
+                        var query = "insert into users (userId, referralXP) values(?,?)";
                         db.query(query, params, function (errorInsertUser, resultsInsertUser) {
                             if (!errorInsertUser) {
                                 res.send(responseGenerator.getResponse(200, "Success", null));
@@ -107,4 +119,35 @@ exports.addCard = function (req, res) {
             res.send(responseGenerator.getResponse(1005, msg.dbError, errorAddCard))
         }
     });
+}
+
+
+
+// check whether the level up or not
+exports.updateReferralXp = function (req, res) {
+
+    db.query("call GetLevelDetail(?,?)", [req.body.requestData.userId, req.body.requestData.availableXp], function (errorGetLevel, resultGetLevel) {
+        if (!errorGetLevel) {
+            if(resultGetLevel[0][0].ip_UserExists){
+                if(resultGetLevel[0][0].ip_newLevel > resultGetLevel[0][0].ip_oldLevel) {
+                    var levelUpObj = { "userId": req.body.requestData.userId, "level": resultGetLevel[0][0].ip_newLevel };
+                                    
+                    nouvoController.sendNotifLevelUp(levelUpObj);
+                    res.send(responseGenerator.getResponse(200, "Success", null));
+                }
+                else {
+                    res.send(responseGenerator.getResponse(200, "Success", null));
+                }
+            }
+            else{
+                res.send(responseGenerator.getResponse(200, "Success", null));
+            }
+
+        }
+        else {
+            logger.error("Error while processing your request", errorGetLevel);
+            res.send(responseGenerator.getResponse(1005, msg.dbError, errorGetLevel))
+        }
+    });
+
 }

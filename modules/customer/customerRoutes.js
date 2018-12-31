@@ -11,4 +11,6 @@ router.post("/createToken", api.createToken);
 
 router.post("/addCard", functions.decryptDataMiddleWare, api.addCard);
 
+router.post("/updateReferralXp", functions.decryptDataMiddleWare, api.updateReferralXp);
+
 module.exports = router;

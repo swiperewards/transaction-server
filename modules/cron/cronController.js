@@ -12,7 +12,8 @@ var cronIntervalTimeInMillis = 300000; // Interval of 300 seconds to get the tra
 var myresp;
 var responseGenerator = require(path.resolve('.', 'utils/responseGenerator.js'));
 var functions = require(path.resolve('./', 'utils/functions.js'));
-
+var arrSendNotifToUsers = [];
+var arrSendNotifToUsersLevelUp = [];
 /**
  * This class performs below function
  * 1) Fetch the new and updated transactions recursively from Splash server.
@@ -52,12 +53,12 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
         url: config.splashApiUrl + "/txns/?expand[payment][]&page[limit]=5&page[number]=" + pageNumber,
         method: 'GET',
         headers:
-            {
-                'Content-Type': 'application/json',
-                'APIKEY': config.splashApiPrivateKey,
-                // 'search': 'modified[Greater]=' + maxModifiedDate,
-                'search': 'and[][modified][sort]=asc&and[][modified][Greater]=' + maxModifiedDate
-            },
+        {
+            'Content-Type': 'application/json',
+            'APIKEY': config.splashApiPrivateKey,
+            // 'search': 'modified[Greater]=' + maxModifiedDate,
+            'search': 'and[][modified][sort]=asc&and[][modified][Greater]=' + maxModifiedDate
+        },
         json: true
     }, function (err, splashResponse) {
 
@@ -81,6 +82,13 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                     //Inserting transactions one by one into the database using db transactions.
                     each(splashResponse.body.response.data,
                         function (txn, next) {
+                            var dataToSendNotif = {};
+                            var dataToSendNotifLevelUp = {};
+                            dataToSendNotif.descriptor = txn.descriptor;
+                            dataToSendNotif.merchant = txn.merchant;
+                            dataToSendNotif.total = txn.total;
+                            dataToSendNotif.msgTxnMade = "You have made $" + (txn.total / 100) + " transaction at " + txn.descriptor;
+
                             con.query("SELECT c.cardNumber, c.userId, u.txnXP from cards c join users u on c.userId = u.userId where c.cardNumber like ?", [txn.payment.bin + "%" + txn.payment.number], function (errCheckCardExists, resultCheckCardExists) {
                                 var userId = null;
                                 var isNouvoUser = (resultCheckCardExists.length > 0) ? "1" : "0";
@@ -98,19 +106,53 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                     else {
                                         if (isNouvoUser == 1) {
                                             var xpCalculated = resultCheckCardExists[0].txnXP + (txn.total / 100)
-                                            con.query("update users set txnXP = ? where userId = ?", [xpCalculated, resultCheckCardExists[0].userId], function (errUpdateXP, resultUpdateXP) {
-                                                if (errUpdateXP) {
-                                                    console.log('Callback Transaction Error.' + err);
-                                                    con.rollback(function () {
-                                                        console.log('Rollbacking Transactions.' + err);
-                                                        // throw err;
-                                                    });
-                                                    setNextScheduledBatchInterval();
-                                                }
-                                                else {
-                                                    insertRecord();
-                                                }
-                                            });
+
+                                            dataToSendNotif.userId = resultCheckCardExists[0].userId;
+                                            dataToSendNotif.txnXP = (txn.total / 100);
+                                            dataToSendNotif.msgXpIncrease = "Way to go! Your purchase at " + txn.descriptor + " has earned you " + (txn.total / 100) + " points. ";
+                                            //prepare array to send notifications
+                                            arrSendNotifToUsers.push(dataToSendNotif);
+
+                                            con.query("select d.id, case when " +
+                                                "((select m.id from mst_level m join users u where (u.referralXP + ?) between m.minRange and m.maxRange and userId = ?)" +
+                                                "> (select m.id from mst_level m join users u where u.xp between m.minRange and m.maxRange and userId = ?)) then true else false end isLevelUp " +
+                                                "from (select m.id from mst_level m join users u where (u.referralXP + ?) between m.minRange and m.maxRange and userId = ?) as d;",
+                                                [xpCalculated, resultCheckCardExists[0].userId, resultCheckCardExists[0].userId, xpCalculated, resultCheckCardExists[0].userId],
+                                                function (errCheckLevelUP, resultCheckLevelUP) {
+                                                    if (errCheckLevelUP) {
+                                                        console.log('Callback Transaction Error.' + errCheckLevelUP);
+                                                        con.rollback(function () {
+                                                            console.log('Rollbacking Transactions.' + errCheckLevelUP);
+                                                            // throw err;
+                                                        });
+                                                        setNextScheduledBatchInterval();
+                                                    }
+                                                    else {
+
+                                                        con.query("update users set txnXP = ? where userId = ?", [xpCalculated, resultCheckCardExists[0].userId], function (errUpdateXP) {
+                                                            if (errUpdateXP) {
+                                                                console.log('Callback Transaction Error.' + err);
+                                                                con.rollback(function () {
+                                                                    console.log('Rollbacking Transactions.' + err);
+                                                                    // throw err;
+                                                                });
+                                                                setNextScheduledBatchInterval();
+                                                            }
+                                                            else {
+                                                                if (resultCheckLevelUP[0].isLevelUp) {
+                                                                    dataToSendNotifLevelUp = {};
+                                                                    dataToSendNotifLevelUp.message = " Congratulations! You are now at level " + resultCheckLevelUP[0].id + ". Keep shopping to keep leveling up and earning cash.";
+                                                                    dataToSendNotifLevelUp.userId = resultCheckCardExists[0].userId;
+                                                                    arrSendNotifToUsersLevelUp.push(dataToSendNotifLevelUp);
+                                                                }
+                                                                insertRecord();
+                                                            }
+                                                        });
+
+                                                    }
+                                                });
+
+
                                         }
                                         else
                                             insertRecord();
@@ -168,7 +210,12 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                 fetchTransactoinFromSplash(splashResponse.body.response.details.page.current + 1, maxModifiedDate);
                             } else {
                                 //All transactions has been fetched.
-
+                                if (arrSendNotifToUsers.length > 0)
+                                    nouvoController.sendNotifToUsers(arrSendNotifToUsers);
+                                if (arrSendNotifToUsersLevelUp.length > 0)
+                                    nouvoController.sendNotifLevelUpAfterTxns(arrSendNotifToUsersLevelUp);
+                                arrSendNotifToUsers = [];
+                                arrSendNotifToUsersLevelUp = [];
                                 //Get the active deals from Nouvo server 1 and update server 1 with updated pool amounts.
                                 getActiveDealsAndUpdatePoolAmounts();
                             }
@@ -270,7 +317,7 @@ function getExpiredDealsAndUpdateRewards() {
             var stakeCalculated = [];
             response.body.responseData = functions.decryptData(response.body.responseData);
             if (response != null && response.body != null && response.body.responseData != null) {
-                
+
                 if (response.body.responseData.length > 0) {
                     each(response.body.responseData,
                         function (deal, next) {
@@ -282,6 +329,7 @@ function getExpiredDealsAndUpdateRewards() {
                             stakeForMerchant.merchantId = deal.merchantId;
                             stakeForMerchant.endDate = deal.endDate;
                             stakeForMerchant.id = deal.id;
+                            stakeForMerchant.entityName = deal.entityName;
                             con.query(query, params, function (err, result) {
                                 if (err) {
                                     setNextScheduledBatchInterval();
@@ -297,7 +345,7 @@ function getExpiredDealsAndUpdateRewards() {
                                         stakeCalculated.push(stakeForMerchant);
                                         next(err);
                                     }
-                                    
+
                                 }
                             });
                             // next(err);

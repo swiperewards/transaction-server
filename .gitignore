@@ -5,3 +5,7 @@
 config.js
 package-lock.json
 logger.log
+app-linux
+app-macos
+app-win.exe
+.vscode/launch.json
