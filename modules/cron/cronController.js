@@ -139,11 +139,13 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                                                 setNextScheduledBatchInterval();
                                                             }
                                                             else {
-                                                                if (resultCheckLevelUP[0].isLevelUp) {
-                                                                    dataToSendNotifLevelUp = {};
-                                                                    dataToSendNotifLevelUp.message = " Congratulations! You are now at level " + resultCheckLevelUP[0].id + ". Keep shopping to keep leveling up and earning cash.";
-                                                                    dataToSendNotifLevelUp.userId = resultCheckCardExists[0].userId;
-                                                                    arrSendNotifToUsersLevelUp.push(dataToSendNotifLevelUp);
+                                                                if (resultCheckLevelUP) {
+                                                                    if ((resultCheckLevelUP.length > 0) && (resultCheckLevelUP[0].isLevelUp)) {
+                                                                        dataToSendNotifLevelUp = {};
+                                                                        dataToSendNotifLevelUp.message = " Congratulations! You are now at level " + resultCheckLevelUP[0].id + ". Keep shopping to keep leveling up and earning cash.";
+                                                                        dataToSendNotifLevelUp.userId = resultCheckCardExists[0].userId;
+                                                                        arrSendNotifToUsersLevelUp.push(dataToSendNotifLevelUp);
+                                                                    }
                                                                 }
                                                                 insertRecord();
                                                             }
@@ -272,30 +274,36 @@ function getActiveDealsAndUpdatePoolAmounts() {
             response.body.responseData = functions.decryptData(response.body.responseData);
             if (response != null && response.body != null && response.body.responseData != null) {
                 //If active deals found then get the pool amount using below function of poolController class.
-                poolController.getPoolAmountByMerchantDetails(response.body.responseData, function (error, poolAmtResponse) {
-                    if (error) {
-                        logger.error("Error while getting active deals", error);
-                        setNextScheduledBatchInterval();
-                    } else {
-                        //Once pool amount is calculated call Nouvo server 1 api to update the  amounts total nouvo user transactions & non nouvo transactions..
-                        nouvoController.updatePoolAmounts(poolAmtResponse, function (error, response) {
-                            if (error) {
-                                logger.error("Error while getting active deals", error);
-                                setNextScheduledBatchInterval();
-                            } else {
-                                //Pool amounts has been updated successfully at Nouvo server 1 
-                                //Now XP points needs to be calculated.
-                                console.log('Success callback pool amount update at server 2 from server 1');
+                if (response.body.responseData.length > 0) {
+                    poolController.getPoolAmountByMerchantDetails(response.body.responseData, function (error, poolAmtResponse) {
+                        if (error) {
+                            logger.error("Error while getting active deals", error);
+                            setNextScheduledBatchInterval();
+                        } else {
+                            //Once pool amount is calculated call Nouvo server 1 api to update the  amounts total nouvo user transactions & non nouvo transactions..
+                            nouvoController.updatePoolAmounts(poolAmtResponse, function (error, response) {
+                                if (error) {
+                                    logger.error("Error while getting active deals", error);
+                                    setNextScheduledBatchInterval();
+                                } else {
+                                    //Pool amounts has been updated successfully at Nouvo server 1 
+                                    //Now XP points needs to be calculated.
+                                    console.log('Success callback pool amount update at server 2 from server 1');
 
-                                //All transactions has been fetched set next transaction sync scheduler
-                                // commenting below function call to add new function call before it
-                                // setNextScheduledBatchInterval();
-                                getExpiredDealsAndUpdateRewards();
+                                    //All transactions has been fetched set next transaction sync scheduler
+                                    // commenting below function call to add new function call before it
+                                    // setNextScheduledBatchInterval();
+                                    getExpiredDealsAndUpdateRewards();
 
-                            }
-                        });
-                    }
-                });
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    getExpiredDealsAndUpdateRewards();
+                }
+
             }
             else {
                 logger.error("Error while getting active deals", error);
