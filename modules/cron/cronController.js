@@ -257,11 +257,11 @@ function setNextScheduledBatchInterval() {
  * @param {*} callback  - Callback which returns the max modified date.
  */
 function getMaxModifedDate(callback) {
-    var query = "SELECT max(modified) as maxModified FROM transactions";
+    var query = "SELECT DATE_FORMAT(max(modified), '%Y-%m-%d %T') as maxModified FROM transactions";
     con.query(query, function (err, resultMaxDate) {
         if (!err && resultMaxDate != null && resultMaxDate[0]['maxModified'] != null && resultMaxDate.length > 0) {
             maxModifiedDate = resultMaxDate[0]['maxModified']
-            maxModifiedDate = maxModifiedDate.toISOString();
+            // maxModifiedDate = maxModifiedDate.toISOString();
             callback(maxModifiedDate);
         } else {
             // return default date in case of error or in case no records found
