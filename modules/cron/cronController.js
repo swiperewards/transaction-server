@@ -47,7 +47,8 @@ function init() {
 function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
     // maxModifiedDate = maxModifiedDate.toISOString();
     console.log('modifiedDate ' + maxModifiedDate);
-
+    logger.info('modifiedDate ' + maxModifiedDate);
+    logger.info('modifiedDate ' + new Date(maxModifiedDate));
     // and[][modified][sort]=asc&and[][modified][Greater]=
     request({
         url: config.splashApiUrl + "/txns/?expand[payment][]&page[limit]=5&page[number]=" + pageNumber,
@@ -64,6 +65,7 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
 
         if (err) {
             console.log('Error while communicating with Splash.' + err);
+            logger.info('Error while communicating with Splash. In cron.');
             setNextScheduledBatchInterval();
         } else {
             // saveTransactionToDatabase(res,splashResponse.body.data)
@@ -78,6 +80,7 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                         throw err;
                     }
                     console.log('Total Transactions received ' + splashResponse.body.response.data.length);
+                    logger.info('Total Transactions received ' + splashResponse.body.response.data.length);
                     var arr = [];
                     //Inserting transactions one by one into the database using db transactions.
                     each(splashResponse.body.response.data,
@@ -121,8 +124,10 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                                 function (errCheckLevelUP, resultCheckLevelUP) {
                                                     if (errCheckLevelUP) {
                                                         console.log('Callback Transaction Error.' + errCheckLevelUP);
+                                                        logger.info('Callback Transaction Error.' + errCheckLevelUP);
                                                         con.rollback(function () {
                                                             console.log('Rollbacking Transactions.' + errCheckLevelUP);
+                                                            logger.info('Rollbacking Transactions.' + errCheckLevelUP);
                                                             // throw err;
                                                         });
                                                         setNextScheduledBatchInterval();
@@ -132,8 +137,10 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                                         con.query("update users set txnXP = ? where userId = ?", [xpCalculated, resultCheckCardExists[0].userId], function (errUpdateXP) {
                                                             if (errUpdateXP) {
                                                                 console.log('Callback Transaction Error.' + err);
+                                                                logger.info('Callback Transaction Error.' + err);
                                                                 con.rollback(function () {
                                                                     console.log('Rollbacking Transactions.' + err);
+                                                                    logger.info('Rollbacking Transactions.' + err);
                                                                     // throw err;
                                                                 });
                                                                 setNextScheduledBatchInterval();
@@ -170,8 +177,10 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                     con.query(insertQuery, params, function (err, result) {
                                         if (err) {
                                             console.log('Callback Transaction Error.' + err);
+                                            logger.info('Callback Transaction Error.' + err);
                                             con.rollback(function () {
                                                 console.log('Rollbacking Transactions.' + err);
+                                                logger.info('Rollbacking Transactions.' + err);
                                                 // throw err;
                                             });
                                             setNextScheduledBatchInterval();
@@ -191,11 +200,13 @@ function fetchTransactoinFromSplash(pageNumber, maxModifiedDate) {
                                     if (err) {
                                         con.rollback(function () {
                                             console.log('Transaction Error while commiting.' + err);
+                                            logger.info('Transaction Error while commiting.' + err);
                                             setNextScheduledBatchInterval();
                                             // throw err;
                                         });
                                     }
                                     console.log('All records inserted & transaction completed.');
+                                    
                                 });
 
                             }
@@ -289,7 +300,7 @@ function getActiveDealsAndUpdatePoolAmounts() {
                                     //Pool amounts has been updated successfully at Nouvo server 1 
                                     //Now XP points needs to be calculated.
                                     console.log('Success callback pool amount update at server 2 from server 1');
-
+                                    logger.info('Success callback pool amount update at server 2 from server 1');
                                     //All transactions has been fetched set next transaction sync scheduler
                                     // commenting below function call to add new function call before it
                                     // setNextScheduledBatchInterval();
